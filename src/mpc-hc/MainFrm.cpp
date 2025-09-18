@@ -8550,13 +8550,20 @@ bool CMainFrame::PerformFlipRotate()
     HRESULT hr = E_NOTIMPL;
     // Note: m_AngleZ is counterclockwise, so value 270 means rotated 90 degrees clockwise
     if (m_pCAP3) {
-        bool isFlip   = m_AngleX == 180;
-        bool isMirror = m_AngleY == 180;
         int rotation = (360 - m_AngleZ + m_iDefRotation) % 360;
-        if (m_pMVRS) {
-            // MadVR: does not support mirror, instead of flip we rotate 180 degrees
+        if (m_pMVRS) { // MadVR
+            bool isFlip = m_AngleX == 180;
+            // MadVR does not support mirror, instead of flip we rotate 180 degrees
             hr = m_pCAP3->SetRotation(isFlip ? (rotation + 180) % 360 : rotation);
-        } else {
+        } else { // MPCVR
+            bool isFlip, isMirror;
+            if (m_iDefRotation == 90 || m_iDefRotation == 270) {
+                isFlip   = m_AngleY == 180;
+                isMirror = m_AngleX == 180;
+            } else {
+                isFlip   = m_AngleX == 180;
+                isMirror = m_AngleY == 180;
+            }
             // MPCVR: instead of flip, we mirror plus rotate 180 degrees
             hr = m_pCAP3->SetRotation(isFlip ? (rotation + 180) % 360 : rotation);
             if (SUCCEEDED(hr)) {
