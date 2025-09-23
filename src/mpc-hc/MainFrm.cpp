@@ -15853,6 +15853,8 @@ bool CMainFrame::OpenMediaPrivate(CAutoPtr<OpenMediaData> pOMD)
         } else {
             PostMessage(WM_OPENFAILED, args.first, args.second);
         }
+    } else {
+        m_bOpenMediaActive = false;
     }
 
     return err.IsEmpty();
