@@ -1022,11 +1022,11 @@ bool CPlayerPlaylistBar::SaveMPCPlayList(CString fn, CTextFile::enc e)
             if (pli.m_ydl_subs.GetCount() > 0) {
                 POSITION pos3 = pli.m_ydl_subs.GetHeadPosition();
                 while (pos3) {
-                    CYoutubeDLInstance::YDLSubInfo s = pli.m_ydl_subs.GetNext(pos3);
-                    if (!s.data.IsEmpty()) continue;
+                    CYoutubeDLInstance::YDLSubInfo subinfo = pli.m_ydl_subs.GetNext(pos3);
+                    if (!subinfo.data.IsEmpty()) continue;
                     CString t;
-                    CString t2 = s.isAutomaticCaptions ? _T("ydl_auto_sub") : _T("ydl_sub");
-                    t.Format(_T("%d,%s,%s,%s,%s\n"), i, static_cast<LPCWSTR>(t2), static_cast<LPCWSTR>(s.lang), static_cast<LPCWSTR>(s.ext), static_cast<LPCWSTR>(s.url));
+                    CString t2 = subinfo.isAutomaticCaptions ? _T("ydl_auto_sub") : _T("ydl_sub");
+                    t.Format(_T("%d,%s,%s,%s,%s\n"), i, static_cast<LPCWSTR>(t2), static_cast<LPCWSTR>(subinfo.lang), static_cast<LPCWSTR>(subinfo.ext), static_cast<LPCWSTR>(subinfo.url));
                     f.WriteString(t);
                 }
             }
