@@ -712,8 +712,10 @@ void SubtitlesTask::ThreadProc()
         if (do_search) {
             for (const auto& iter : m_pMainFrame->m_pSubtitlesProviders->Providers()) {
                 if (iter->Enabled(SPF_SEARCH) && !IsThreadAborting()) {
-                    CAutoLock tlock(&m_csThreadLock);
-                    InsertThread(DEBUG_NEW SubtitlesThread(this, pFileInfo, iter));
+                    if (!(m_nType & STT_DOWNLOAD) || iter->UseForAutoDownload()) {
+                        CAutoLock tlock(&m_csThreadLock);
+                        InsertThread(DEBUG_NEW SubtitlesThread(this, pFileInfo, iter));
+                    }
                 }
             }
         }
@@ -737,26 +739,26 @@ void SubtitlesTask::ThreadProc()
                 Sleep(100);
             }
         }
-    }
 
-    // Wait here until all threads have finished
-    while (!m_pThreads.empty()) {
-        Sleep(20);
-    }
+        // Wait until all threads have finished
+        while (!m_pThreads.empty()) {
+            Sleep(20);
+        }
 
-    if (m_nType & STT_SEARCH) {
-        BOOL bShowDialog = !m_AutoDownload.empty() || m_bAutoDownload;
-        for (const auto& iter : m_AutoDownload) {
-            if (iter.second) {
-                bShowDialog = FALSE;
-                break;
+        if (m_nType & STT_SEARCH) {
+            BOOL bShowDialog = !m_AutoDownload.empty() || m_bAutoDownload;
+            for (const auto& iter : m_AutoDownload) {
+                if (iter.second) {
+                    bShowDialog = FALSE;
+                    break;
+                }
             }
+            bool isAbort = IsThreadAborting();
+            if (!isAbort || !AfxGetMyApp()->m_fClosingState) {
+                m_pMainFrame->m_wndSubtitlesDownloadDialog.DoFinished(isAbort, bShowDialog);
+            }
+        } else if (m_nType & STT_DOWNLOAD) {
         }
-        bool isAbort = IsThreadAborting();
-        if (!isAbort || !AfxGetMyApp()->m_fClosingState) {
-            m_pMainFrame->m_wndSubtitlesDownloadDialog.DoFinished(isAbort, bShowDialog);
-        }
-    } else if (m_nType & STT_DOWNLOAD) {
     }
 
     {
