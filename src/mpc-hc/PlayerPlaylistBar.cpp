@@ -1807,7 +1807,6 @@ void CPlayerPlaylistBar::OnLvnKeyDown(NMHDR* pNMHDR, LRESULT* pResult)
     if (pLVKeyDown->wVKey == VK_DELETE) {
         if (m_pl.GetCount() > 1) {
             POSITION remplpos = FindPos(selected);
-            CPlaylistItem pli = m_pl.GetAt(remplpos);
             POSITION curplpos = m_pl.GetPos();
             if (!remplpos) {
                 ASSERT(FALSE);
