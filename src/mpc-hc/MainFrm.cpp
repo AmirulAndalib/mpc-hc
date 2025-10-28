@@ -2789,8 +2789,12 @@ void CMainFrame::OnABRepeat(UINT nID) {
         REFERENCE_TIME pos = 0;
 
         if (playmode == PM_FILE && m_pMS) {
-            m_pMS->GetDuration(&rtDur);
-            havePos = SUCCEEDED(m_pMS->GetCurrentPosition(&pos));
+            if (SUCCEEDED(m_pMS->GetDuration(&rtDur))) {
+                havePos = SUCCEEDED(m_pMS->GetCurrentPosition(&pos)) && (rtDur >= pos);
+            }
+            if (!havePos && !abRepeat.positionA && !abRepeat.positionB) {
+                return;
+            }
         } else if (playmode == PM_DVD && m_pDVDI) {
             DVD_PLAYBACK_LOCATION2 Location;
             if (m_pDVDI->GetCurrentLocation(&Location) == S_OK) {
@@ -2816,12 +2820,8 @@ void CMainFrame::OnABRepeat(UINT nID) {
                 abRepeat.positionA = 0;
             } else if (havePos) {
                 abRepeat.positionA = pos;
-                if (abRepeat.positionA < rtDur) {
-                    if (abRepeat.positionB && abRepeat.positionA + 500 * 10000LL > abRepeat.positionB) {
-                        abRepeat.positionB = 0;
-                    }
-                } else {
-                    abRepeat.positionA = 0;
+                if (abRepeat.positionB && (abRepeat.positionA >= abRepeat.positionB || !m_fShockwaveGraph && abRepeat.positionA + 500 * 10000LL > abRepeat.positionB)) {
+                    abRepeat.positionB = 0;
                 }
             }
         } else if (nID == ID_PLAY_REPEAT_AB_MARK_B) {
@@ -2829,7 +2829,7 @@ void CMainFrame::OnABRepeat(UINT nID) {
                 abRepeat.positionB = 0;
             } else if (havePos) {
                 abRepeat.positionB = pos;
-                if (abRepeat.positionB > 0 && rtDur >= abRepeat.positionB && abRepeat.positionB >= abRepeat.positionA + 500 * 10000LL) {
+                if (m_fShockwaveGraph && abRepeat.positionB > abRepeat.positionA || abRepeat.positionB >= abRepeat.positionA + 500 * 10000LL) {
                     if (GetMediaState() == State_Running) {
                         PerformABRepeat(); //we just set loop point B, so we need to repeat right now
                     }
