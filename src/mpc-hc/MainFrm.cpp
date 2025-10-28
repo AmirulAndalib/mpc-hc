@@ -19419,7 +19419,12 @@ void CMainFrame::CloseMedia(bool bNextIsQueued/* = false*/, bool bPendingFileDel
                         if (extendedwait || m_fFullScreen) {
                             processmsg = false;
                         } else {
-                            CString msg = L"Timeout while aborting filter graph creation.\n\nClick YES to terminate player process. Click NO to wait longer (up to 15 seconds).";
+                            CString msg;
+                            if (s.iDSVideoRendererType == VIDRNDT_DS_MADVR) {
+                                msg = L"Timeout while aborting filter graph creation.\n\nIf files load slowly with MadVR, you should change dithering in Madvr settings (Error Diffusion is broken on AMD GPU).\n\nClick YES to terminate player process. Click NO to wait longer (up to 15 seconds).";
+                            } else {
+                                msg = L"Timeout while aborting filter graph creation.\n\nClick YES to terminate player process. Click NO to wait longer (up to 15 seconds).";
+                            }
                             if (IDYES == AfxMessageBox(msg, MB_ICONEXCLAMATION | MB_YESNO, 0)) {
                                 processmsg = false;
                             } else {
