@@ -827,6 +827,7 @@ public:
 protected:  // control bar embedded members
     friend class CMainFrameControls;
     friend class CPPageToolBarLayout;
+    friend class CPPageToolBar;
     CMainFrameControls m_controls;
     friend class CPlayerBar; // it notifies m_controls of panel re-dock
 
