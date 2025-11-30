@@ -1956,7 +1956,7 @@ msgid "Toolbar Scale:"
 msgstr "도구 모음 크기 :"
 
 msgctxt "IDD_PPAGETOOLBAR_IDC_STATIC"
-msgid "ToolBar Alignment:"
+msgid "Toolbar Alignment:"
 msgstr ""
 
 msgctxt "IDD_PPAGETOOLBAR_IDC_STATIC"

@@ -1999,7 +1999,7 @@ msgid "Toolbar Scale:"
 msgstr "Kontrol çubuğu boyutu:"
 
 msgctxt "IDD_PPAGETOOLBAR_IDC_STATIC"
-msgid "ToolBar Alignment:"
+msgid "Toolbar Alignment:"
 msgstr ""
 
 msgctxt "IDD_PPAGETOOLBAR_IDC_STATIC"
