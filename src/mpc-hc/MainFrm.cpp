@@ -11284,7 +11284,7 @@ void CMainFrame::PlayFavoriteFile(const CString& fav)
 
     m_wndPlaylistBar.SetCurLabel(ff.Name);
 
-    if (GetPlaybackMode() == PM_FILE && args.GetHead() == m_lastOMD->title) {
+    if (GetPlaybackMode() == PM_FILE && m_lastOMD && args.GetHead() == m_lastOMD->title) {
         m_pMS->SetPositions(&rtStart, AM_SEEKING_AbsolutePositioning, nullptr, AM_SEEKING_NoPositioning);
         OnPlayPlay();
     } else {
