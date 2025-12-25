@@ -644,7 +644,7 @@ protected:
     void LoadKeyFrames();
     std::vector<REFERENCE_TIME> m_kfs;
 
-    bool m_fOpeningAborted;
+    volatile bool m_fOpeningAborted;
     bool m_bWasSnapped;
 
 protected:
